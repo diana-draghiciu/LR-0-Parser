@@ -1,0 +1,51 @@
+Program
+Program,Declaration,Type1,Arraydecl,Type,Stmtlist,Stmt,Structstmt,Simplstmt,Assignstmt,Expression,Term,Factor,Iostmt,Ifstmt,Whilestmt,Foreachstmt,Forstmt,Relation,Logicalop,Condition
+main,(,),:, ,int,string,[,],=,+,-,*,/,even,odd,write,read,islt,islte,is,isgt,isgte,isnot,and,or,for,in,if,while
+Program->main():Stmtlist
+Declaration->Type Identifier
+Type1->int
+Type1->string
+Arraydecl->Type1[]
+Type->Type1
+Type->Arraydecl
+Stmtlist->Stmt
+Stmtlist->StmtStmtlist
+Stmt->Simplstmt
+Stmt->Structstmt
+Structstmt->Ifstmt
+Structstmt->Whilestmt
+Structstmt->Forstmt
+Structstmt->Foreachstmt
+Simplstmt->Assignstmt
+Simplstmt->Iostmt
+Simplstmt->Declaration
+Assignstmt->Identifier=Expresion
+Expression->Expression+Term
+Expression->Expression-Term
+Expression->Term
+Expression->even
+Expression->odd
+Term->Term*Factor
+Term->Term/Factor
+Term->Factor
+Factor->(Expression)
+Factor->Identifier
+Factor->Constant
+Iostmt->read Identifier
+Iostmt->write Identifier
+Iostmt->write Constant
+Ifstmt->if(Condition){Stmt}else{Stmt}
+Ifstmt->if(Condition){Stmt}
+Whilestmt->while(Condition){Stmt}
+Foreachstmt->for(Identifier in Identifier){Stmt}
+Forstmt->for(Assignstmt;Condition;Assignstmt){Stmt}
+Condition->ExpressionRelationExpression
+Condition->ConditionLogicalopCondition
+Relation->islt
+Relation->islte
+Relation->is
+Relation->isnot
+Relation->isgte
+Relation->isgt
+Logicalop->or
+Logicalop->and
