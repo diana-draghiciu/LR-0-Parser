@@ -1,5 +1,3 @@
-# LR(0)-Parser
-
 # Implement lr(0) parser algorithm
 
 # PART 1: Deliverables 
