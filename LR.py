@@ -40,8 +40,8 @@ class LR:
                             for prod in self.grammar.productions.keys():
                                 if prod == symbol:
                                     new_state = ""
-                                    new_state += prod
-                                    new_state += "->."
+                                    #  new_state += prod
+                                    new_state += "."
                                     new_state += self.grammar.productions[prod]
                                     items.append(new_state)  # add to the list the new state
                     else:  # dot at end
