@@ -3,16 +3,16 @@ class LR:
         self.grammar = grammar
         self.grammar.productions['S`'] = []
         self.grammar.productions['S`'].append('S')  # add augmented production
-        self.canonicalCollection = {} # productions, but with the dot added
-        self.createCanCol()
+        self.canonicalCollection = {}  # productions, but with the dot added
+        self.create_can_col()
 
-    def createCanCol(self):
+    def create_can_col(self):
         for production in self.grammar.productions:
             self.canonicalCollection[production] = []
             for elem in self.grammar.productions[production]:
                 self.canonicalCollection[production].append('.' + elem)
 
-    def computeClosure(self, list):
+    def closure(self, list):  # list contains productions
         """
         I-state
         repeat
@@ -28,7 +28,9 @@ class LR:
         """
         # inputState: [a.A, b.]
         items = list.copy()
-        while True:
+        ok = True
+        while ok:
+            prev = items.copy()
             for elem in items.values():
                 index = elem.find('.')
                 if index != -1:
@@ -36,23 +38,26 @@ class LR:
                         symbol = elem[index + 1]
                         if symbol in self.grammar.non_terminals:  # found dot non-terminal
                             for prod in self.grammar.productions.keys():
-                                if prod == symbol and prod not in items:
-                                    items.append(prod)
-                            if list == items:
-                                break
+                                if prod == symbol:
+                                    new_state = ""
+                                    new_state += prod
+                                    new_state += "->."
+                                    new_state += self.grammar.productions[prod]
+                                    items.append(new_state)  # add to the list the new state
                     else:  # dot at end
                         continue
-        #TODO
-        # return ??
+            if prev == items:
+                ok = False
+        return items  # item is a list of productions
 
-    def goTo(self, state, symbol):
+    def goto(self, state, symbol):
         """
         goto(s, X) = closure({[A → αX.β]|[A → α.Xβ] ∈ s})
         :param state: initial state
         :param symbol: non-terminal to find in initial state productions
         :return: a closure
         """
-        # ex state=S, symbol=A we find .AA and move the dot and end up with A.A and call closure
+        # ex state=S, symbol=A, we find .AA and move the dot and end up with A.A and call closure
         items = []
         for elem in self.canonicalCollection[state]:
             index = elem.find('.')
@@ -73,11 +78,11 @@ class LR:
             else:
                 continue
         if items:
-            return self.computeClosure(items)
+            return self.closure(items)
         else:
             return []
 
-    def canonicalCol(self):
+    def canonical_col(self):
         """
         repeat
             for any s in C do
@@ -93,7 +98,7 @@ class LR:
             aux_canonical_collection = self.canonicalCollection.copy()
             for s in aux_canonical_collection:
                 for X in self.grammar.non_terminals + self.grammar.terminals:
-                    result = self.goTo(s, X)
+                    result = self.goto(s, X)
                     if result != [] and result not in aux_canonical_collection.values():
                         self.canonicalCollection[s].append(result)
             if aux_canonical_collection == self.canonicalCollection:  # C stopped changing
