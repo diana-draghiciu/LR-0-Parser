@@ -53,6 +53,9 @@ class LR:
         return items  # item is a list of items
 
     def goto(self, state, symbol):
+
+        # state should be a set of items
+        # symbol shoud be a terminal/non-terminal
         """
         goto(s, X) = closure({[A → αX.β]|[A → α.Xβ] ∈ s})
         :param state: initial state
@@ -76,8 +79,10 @@ class LR:
                         else:
                             aux += elem[i]
                             i += 1
-                    auxx = Item()
-                    items.append(aux)   # aux should be of type Item
+                    right = aux
+                    left = symbol
+                    auxx = Item(left, right)
+                    items.append(auxx)  # aux should be of type Item
             else:
                 continue
         if items:
