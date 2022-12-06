@@ -1,3 +1,6 @@
+from Item import Item
+
+
 class LR:
     def __init__(self, grammar):
         self.grammar = grammar
@@ -12,7 +15,7 @@ class LR:
             for elem in self.grammar.productions[production]:
                 self.canonicalCollection[production].append('.' + elem)
 
-    def closure(self, list):  # list contains productions
+    def closure(self, list):  # list contains items
         """
         I-state
         repeat
@@ -26,29 +29,28 @@ class LR:
         until C stops changing
         :return: C = closure(I);
         """
-        # inputState: [a.A, b.]
         items = list.copy()
         ok = True
         while ok:
             prev = items.copy()
-            for elem in items.values():
-                index = elem.find('.')
+            for elem in items:  # items()	Returns a list containing a tuple for each key value pair
+                index = elem.dot_position()
                 if index != -1:
-                    if index < len(elem):  # dot not at end
-                        symbol = elem[index + 1]
+                    if index < len(elem.right):  # dot not at end
+                        symbol = elem.roght[index + 1]  # WHAT IF ITS COMPOSED FROM MULTIPLE SYMBOLS?
                         if symbol in self.grammar.non_terminals:  # found dot non-terminal
                             for prod in self.grammar.productions.keys():
                                 if prod == symbol:
-                                    new_state = ""
-                                    #  new_state += prod
-                                    new_state += "."
-                                    new_state += self.grammar.productions[prod]
-                                    items.append(new_state)  # add to the list the new state
+                                    right = ""
+                                    right += "."
+                                    right += self.grammar.productions[prod]  # compose the right side with the dot
+                                    new_item = Item(elem.left, right)
+                                    items[prod].append(new_item)  # add to the new item to the list of items
                     else:  # dot at end
                         continue
             if prev == items:
                 ok = False
-        return items  # item is a list of productions
+        return items  # item is a list of items
 
     def goto(self, state, symbol):
         """
