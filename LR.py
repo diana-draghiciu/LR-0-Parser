@@ -39,12 +39,12 @@ class LR:
                     if index < len(elem.right):  # dot not at end
                         symbol = elem.roght[index + 1]  # WHAT IF ITS COMPOSED FROM MULTIPLE SYMBOLS?
                         if symbol in self.grammar.non_terminals:  # found dot non-terminal
-                            for prod in self.grammar.productions.keys():
+                            for prod in self.grammar.productions.keys():  # look for a production with the symbol
                                 if prod == symbol:
                                     right = ""
                                     right += "."
                                     right += self.grammar.productions[prod]  # compose the right side with the dot
-                                    new_item = Item(elem.left, right)
+                                    new_item = Item(symbol, right)
                                     items[prod].append(new_item)  # add to the new item to the list of items
                     else:  # dot at end
                         continue
@@ -76,7 +76,8 @@ class LR:
                         else:
                             aux += elem[i]
                             i += 1
-                    items.append(aux)
+                    auxx = Item()
+                    items.append(aux)   # aux should be of type Item
             else:
                 continue
         if items:
