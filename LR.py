@@ -2,10 +2,11 @@ class LR:
     def __init__(self, grammar):
         self.grammar = grammar
         self.canonicalCollection = []
-        self.goToList = []
+        self.goToList = {}
         self.action = []
         self.canonical_col()
         self.computeAction()
+        self.parseInput(['a', 'b', 'b', 'c'])
 
     def closure(self, list):  # list contains items
         """
@@ -105,8 +106,8 @@ class LR:
                             self.canonicalCollection.append(result)
 
                         current_state = self.canonicalCollection.index(result)
-                        if {(index, X): current_state} not in self.goToList:
-                            self.goToList.append({(index, X): current_state})
+                        if (index, X) not in self.goToList:
+                            self.goToList[(index, X)] = current_state
                 index += 1
             if aux_canonical_collection == self.canonicalCollection:  # C stopped changing
                 break
@@ -142,3 +143,15 @@ class LR:
             elif reduce:
                 self.action.append("reduce" + str(self.findReduceIndex(elem[0])))  # always only one element
         print("Action: " + str(self.action))
+
+    def parseInput(self, input):
+        wstack = [0]
+        oband = []
+        for elem in input:
+            if len(input) > 0:
+                prev = wstack[-1]
+                wstack.append(elem)  # push element to working stack
+                wstack.append(self.goToList[(prev, elem)])
+                input = input[1:]  # pop element from input stack
+            # TODO continue parsing when reducing starts ->compute oband
+        print("WorkStack: " + str(wstack))
