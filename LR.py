@@ -3,6 +3,9 @@ class LR:
         self.grammar = grammar
         self.canonicalCollection = []
         self.goToList = []
+        self.action = []
+        self.canonical_col()
+        self.computeAction()
 
     def closure(self, list):  # list contains items
         """
@@ -107,4 +110,35 @@ class LR:
                 index += 1
             if aux_canonical_collection == self.canonicalCollection:  # C stopped changing
                 break
-        print("GoToList: "+str(self.goToList))
+        print("GoToList: " + str(self.goToList))
+
+    def findReduceIndex(self, production):
+        rhs = production[1][:-1]  # get rhs without dot
+        index = 1
+        for elem in self.grammar.productions.values():  # elem is a list of rhs
+            for e in elem:
+                if e == rhs:
+                    return index
+                index += 1
+        return index
+
+    def computeAction(self):
+        for elem in self.canonicalCollection:
+            shift = True
+            accept = False
+            reduce = True
+            for production in elem:
+                dot_index = production[1].find('.')
+                if dot_index == len(production[1]) - 1:
+                    shift = False
+                else:
+                    reduce = False
+                if production[1] == self.grammar.start + '.':
+                    accept = True
+            if shift:
+                self.action.append("shift")
+            elif accept:
+                self.action.append("accept")
+            elif reduce:
+                self.action.append("reduce" + str(self.findReduceIndex(elem[0])))  # always only one element
+        print("Action: " + str(self.action))
