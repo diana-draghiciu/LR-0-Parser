@@ -6,4 +6,3 @@ if __name__ == '__main__':
     # g.menu()
     lr = LR(g)
     lr.canonical_col()
-    print(lr.canonicalCollection)

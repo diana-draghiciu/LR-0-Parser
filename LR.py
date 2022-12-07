@@ -1,7 +1,8 @@
 class LR:
     def __init__(self, grammar):
         self.grammar = grammar
-        self.canonicalCollection = []  # productions, but with the dot added
+        self.canonicalCollection = []
+        self.goToList = []
 
     def closure(self, list):  # list contains items
         """
@@ -24,7 +25,7 @@ class LR:
             for elem in items:  # items()	Returns a list containing a tuple for each key value pair
                 index = elem[1].find('.')
                 if index != -1:
-                    if index < len(elem[1])-1:  # dot not at end
+                    if index < len(elem[1]) - 1:  # dot not at end
                         symbol = elem[1][index + 1]  # WHAT IF ITS COMPOSED FROM MULTIPLE SYMBOLS?
                         if symbol in self.grammar.non_terminals:  # found dot non-terminal
                             for prod in self.grammar.productions.keys():  # look for a production with the symbol
@@ -55,7 +56,7 @@ class LR:
         items = []
         for elem in state:
             index = elem[1].find('.')
-            if index < len(elem[1])-1:  # dot not at end
+            if index < len(elem[1]) - 1:  # dot not at end
                 if elem[1][index + 1] == symbol:
                     # move dot
                     aux = ""
@@ -88,13 +89,22 @@ class LR:
             end for
         until C stops changing
         """
-        self.canonicalCollection.append(self.closure([('S`', '.' + self.grammar.start)]))
+        state0 = self.closure([('S`', '.' + self.grammar.start)])
+        self.canonicalCollection.append(state0)
         while True:
             aux_canonical_collection = self.canonicalCollection.copy()
+            index = 0
             for s in aux_canonical_collection:
                 for X in self.grammar.non_terminals + self.grammar.terminals:
                     result = self.goto(s, X)
-                    if result != [] and result not in aux_canonical_collection:
-                        self.canonicalCollection.append(result)
+                    if result != []:
+                        if result not in aux_canonical_collection:
+                            self.canonicalCollection.append(result)
+
+                        current_state = self.canonicalCollection.index(result)
+                        if {(index, X): current_state} not in self.goToList:
+                            self.goToList.append({(index, X): current_state})
+                index += 1
             if aux_canonical_collection == self.canonicalCollection:  # C stopped changing
                 break
+        print("GoToList: "+str(self.goToList))
