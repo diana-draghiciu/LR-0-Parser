@@ -4,6 +4,11 @@ class LR:
         self.canonicalCollection = []
         self.goToList = {}
         self.action = []
+
+        self.info = []
+        self.parent = [0]
+        self.sibling = [0]
+
         self.canonical_col()
         self.computeAction()
         self.parseInput(['a', 'b', 'b', 'c'])
@@ -123,6 +128,21 @@ class LR:
                 index += 1
         return index
 
+    def checkIfProduction(self, prod):
+        for key, value in self.grammar.productions.items():
+            for p in value:
+                if p == prod:
+                    return True, key
+        return False, ''
+
+    def getProductionByNr(self, nr):
+        index = 1
+        for key, value in self.grammar.productions.items():
+            for p in value:
+                if index == nr:
+                    return key, p
+                index += 1
+
     def computeAction(self):
         for elem in self.canonicalCollection:
             shift = True
@@ -153,5 +173,47 @@ class LR:
                 wstack.append(elem)  # push element to working stack
                 wstack.append(self.goToList[(prev, elem)])
                 input = input[1:]  # pop element from input stack
-            # TODO continue parsing when reducing starts ->compute oband
+
         print("WorkStack: " + str(wstack))
+        # reduce starts
+        while len(wstack) > 0:
+            production = ""
+            state = wstack[-1]
+            while True:
+                result, replacedValue = self.checkIfProduction(production)
+                if result:
+                    break
+                wstack.pop()  # remove state
+                prod = wstack.pop()
+                production = prod + production
+            action = int(self.action[state][-1])
+            oband.insert(0, action)
+            wstack.append(replacedValue)
+            wstack.append(self.goToList[(wstack[-2], replacedValue)])
+            if replacedValue == self.grammar.start:
+                break
+        print("Output band: " + str(oband))
+
+        parent, prod = self.getProductionByNr(oband[0])
+        self.info.append(parent)
+
+        self.addToTable(oband, 0, 1)
+        self.printTable()
+
+    def printTable(self):
+        for i in range(len(self.info)):
+            print(i+1, self.info[i], self.parent[i], self.sibling[i])
+
+    def addToTable(self, oband, obandIndex, parent_index):
+        parent, prod = self.getProductionByNr(oband[obandIndex])
+        index = parent_index + 1
+        for elem in prod:
+            self.info.append(elem)
+            self.parent.append(parent_index)
+            if self.info[-2] != parent:
+                self.sibling.append(len(self.info)-1)
+            else:
+                self.sibling.append(0)
+            if elem in self.grammar.non_terminals:
+                self.addToTable(oband, obandIndex + 1, index)
+            index += 1
