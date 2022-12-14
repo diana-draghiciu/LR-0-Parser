@@ -164,45 +164,52 @@ class LR:
                 self.action.append("reduce" + str(self.findReduceIndex(elem[0])))  # always only one element
         print("Action: " + str(self.action))
 
+    def getProduction(self, prod, prodnr):
+        # for key, value in self.grammar.productions.items():
+        #     for p in value:
+        #         if p == prod:
+        #             return  key
+        #
+        return self.grammar.productions[prodnr]
+
     def parseInput(self, input):
         wstack = [0]
         oband = []
-        for elem in input:
-            if len(input) > 0:
-                prev = wstack[-1]
-                wstack.append(elem)  # push element to working stack
-                wstack.append(self.goToList[(prev, elem)])
-                input = input[1:]  # pop element from input stack
 
-        print("WorkStack: " + str(wstack))
-        # reduce starts
         while len(wstack) > 0:
-            production = ""
-            state = wstack[-1]
-            while True:
-                result, replacedValue = self.checkIfProduction(production)
-                if result:
-                    break
-                wstack.pop()  # remove state
-                prod = wstack.pop()
-                production = prod + production
-            action = int(self.action[state][-1])
-            oband.insert(0, action)
-            wstack.append(replacedValue)
-            wstack.append(self.goToList[(wstack[-2], replacedValue)])
-            if replacedValue == self.grammar.start:
+            state = wstack[-1]  # state to check for state
+            if self.action[state][0] == "s":
+                wstack.append(input[0])  # push element to working stack
+                wstack.append(self.goToList[(state, input[0])])
+                input = input[1:]  # pop element from input stack
+            elif self.action[state][0] == 'r':
+                production = ""
+                state = wstack[-1]
+                while True:
+                    result, replaced_value = self.checkIfProduction(production)
+                    if result:
+                        break
+                    wstack.pop()  # remove state
+                    prod = wstack.pop()
+                    production = prod + production
+                action = int(self.action[state][-1])
+                oband.insert(0, action)
+                wstack.append(replaced_value)
+                wstack.append(self.goToList[(wstack[-2], replaced_value)])
+            elif self.action[state][0] == 'a':
                 break
-        print("Output band: " + str(oband))
 
         parent, prod = self.getProductionByNr(oband[0])
         self.info.append(parent)
-
         self.addToTable(oband, 0, 1)
+        print("WorkStack: " + str(wstack))
         self.printTable()
+  
+
 
     def printTable(self):
         for i in range(len(self.info)):
-            print(i+1, self.info[i], self.parent[i], self.sibling[i])
+            print(i + 1, self.info[i], self.parent[i], self.sibling[i])
 
     def addToTable(self, oband, obandIndex, parent_index):
         parent, prod = self.getProductionByNr(oband[obandIndex])
@@ -211,7 +218,7 @@ class LR:
             self.info.append(elem)
             self.parent.append(parent_index)
             if self.info[-2] != parent:
-                self.sibling.append(len(self.info)-1)
+                self.sibling.append(len(self.info) - 1)
             else:
                 self.sibling.append(0)
             if elem in self.grammar.non_terminals:
