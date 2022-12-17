@@ -66,15 +66,18 @@ class LR:
         for elem in state:
             index = elem[1].find('.')
             if index < len(elem[1]) - 1:  # dot not at end
-                # if elem[1][index + 1] == symbol: # CHANGE TO LOOK AT WHAT FOLLOWS AFTER
-                # if elem[1].startswith(symbol): not good cuz it start with .
-                if elem[1].startswith("." + symbol):
+                st = elem[1][index:len(elem[1])]
+                # if elem[1][index + 1] == symbol:  # CHANGE TO LOOK AT WHAT FOLLOWS AFTER
+                if st.startswith("." + symbol):
                     # move dot
                     aux = ""
+                    st2 = elem[1][0:index]
+                    aux += st2
                     aux += symbol
                     aux += "."
-                    if len(aux)!=len(elem[1]):
+                    if len(aux) != len(elem[1]):
                         aux += elem[1][len(aux)]
+
                     # i = 0
                     # while i < (len(elem[1])):
                     #     if i == index:
