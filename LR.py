@@ -4,7 +4,7 @@ class LR:
         self.canonicalCollection = []
         self.goToList = {}
         self.action = []
-        #self.pif = []
+        # self.pif = []
 
         self.info = []
         self.parent = [0]
@@ -52,33 +52,39 @@ class LR:
                 ok = False
         return items  # item is a list of items
 
+    # state should be a set of items
+    # symbol should be a terminal/non-terminal
+    # ex state=S, symbol=A, we find .AA and move the dot and end up with A.A and call closure
     def goto(self, state, symbol):
-
-        # state should be a set of items
-        # symbol shoud be a terminal/non-terminal
         """
         goto(s, X) = closure({[A → αX.β]|[A → α.Xβ] ∈ s})
         :param state: initial state
         :param symbol: non-terminal to find in initial state productions
         :return: a closure
         """
-        # ex state=S, symbol=A, we find .AA and move the dot and end up with A.A and call closure
         items = []
         for elem in state:
             index = elem[1].find('.')
             if index < len(elem[1]) - 1:  # dot not at end
-                if elem[1][index + 1] == symbol:
+                # if elem[1][index + 1] == symbol: # CHANGE TO LOOK AT WHAT FOLLOWS AFTER
+                # if elem[1].startswith(symbol): not good cuz it start with .
+                if elem[1].startswith("." + symbol):
                     # move dot
                     aux = ""
-                    i = 0
-                    while i < (len(elem[1])):
-                        if i == index:
-                            aux += elem[1][i + 1]
-                            aux += elem[1][i]
-                            i += 2
-                        else:
-                            aux += elem[1][i]
-                            i += 1
+                    aux += symbol
+                    aux += "."
+                    if len(aux)!=len(elem[1]):
+                        aux += elem[1][len(aux)]
+                    # i = 0
+                    # while i < (len(elem[1])):
+                    #     if i == index:
+                    #         aux += elem[1][i + 1]
+                    #         aux += elem[1][i]
+                    #         i += 2
+                    #     else:
+                    #         aux += elem[1][i]
+                    #         i += 1
+
                     items.append((elem[0], aux))  # aux should be of type Item
             else:
                 continue

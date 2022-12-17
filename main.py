@@ -28,15 +28,16 @@ if __name__ == '__main__':
     faC = FA("constantFA.in")
     scanner = Scanner('p2.txt', st, ct, faS, faC)
 
-    # g = Grammar('Grammars/grammar2.in') # own language
-    
-    g = Grammar('Grammars/grammar3.in')
-    f = open("seq.txt", 'rt')
-    lines = f.readlines()
-    w = []
-    for line in lines:
-        w.append(line.strip('\n'))
-    f.close()
-
-    #lr = LR(g, createW(scanner, st, ct))
-    lr = LR(g, w)
+    prog = 3
+    if prog == 2:
+        g = Grammar('Grammars/grammar2.in')  # own language
+        lr = LR(g, createW(scanner, st, ct))
+    elif prog == 3:
+        g = Grammar('Grammars/grammar3.in')
+        f = open("seq.txt", 'rt')
+        lines = f.readlines()
+        w = []
+        for line in lines:
+            w.append(line.strip('\n'))
+        f.close()
+        lr = LR(g, w)    # with grammar 3
