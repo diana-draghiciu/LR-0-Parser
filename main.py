@@ -28,7 +28,9 @@ if __name__ == '__main__':
     faC = FA("constantFA.in")
     scanner = Scanner('p2.txt', st, ct, faS, faC)
 
-    g = Grammar('grammar2.in')
+    # g = Grammar('Grammars/grammar2.in') # own language
+    
+    g = Grammar('Grammars/grammar3.in')
     f = open("seq.txt", 'rt')
     lines = f.readlines()
     w = []
@@ -36,4 +38,5 @@ if __name__ == '__main__':
         w.append(line.strip('\n'))
     f.close()
 
-    lr = LR(g, createW(scanner, st, ct))
+    #lr = LR(g, createW(scanner, st, ct))
+    lr = LR(g, w)
