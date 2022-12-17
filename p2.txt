@@ -1,0 +1,11 @@
+main():
+    int[] x
+    read x
+    int sum
+    sum=0
+    for(elem in x){
+        if(elem is even){
+	        sum=sum+elem
+	    }
+	}
+    write sum

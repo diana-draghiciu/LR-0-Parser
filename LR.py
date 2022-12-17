@@ -1,9 +1,10 @@
 class LR:
-    def __init__(self, grammar):
+    def __init__(self, grammar, w):
         self.grammar = grammar
         self.canonicalCollection = []
         self.goToList = {}
         self.action = []
+        #self.pif = []
 
         self.info = []
         self.parent = [0]
@@ -11,7 +12,7 @@ class LR:
 
         self.canonical_col()
         self.computeAction()
-        self.parseInput(['a', 'b', 'b', 'c'])
+        self.parseInput(w)
 
     def closure(self, list):  # list contains items
         """
@@ -204,8 +205,6 @@ class LR:
         self.addToTable(oband, 0, 1)
         print("WorkStack: " + str(wstack))
         self.printTable()
-  
-
 
     def printTable(self):
         for i in range(len(self.info)):
