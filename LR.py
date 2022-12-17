@@ -36,7 +36,8 @@ class LR:
                 index = elem[1].find('.')
                 if index != -1:
                     if index < len(elem[1]) - 1:  # dot not at end
-                        symbol = elem[1][index + 1]  # WHAT IF ITS COMPOSED FROM MULTIPLE SYMBOLS?
+                        # symbol = elem[1][index + 1:]  # WHAT IF IT'S COMPOSED FROM MULTIPLE SYMBOLS?
+                        symbol = elem[1][index + 1:]  # ASSUME ONLY ONE AT END
                         if symbol in self.grammar.non_terminals:  # found dot non-terminal
                             for prod in self.grammar.productions.keys():  # look for a production with the symbol
                                 if prod == symbol:
@@ -76,7 +77,7 @@ class LR:
                     aux += symbol
                     aux += "."
                     if len(aux) != len(elem[1]):
-                        aux += elem[1][len(aux)]
+                        aux += elem[1][len(aux):]
 
                     # i = 0
                     # while i < (len(elem[1])):

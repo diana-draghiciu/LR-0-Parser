@@ -18,6 +18,7 @@ def createW(scanner, st, ct):
             w.append(symbol)
         else:
             w.append(key)
+    print(w)
     return w
 
 
@@ -26,9 +27,9 @@ if __name__ == '__main__':
     ct = ST()
     faS = FA("symbolFA.in")
     faC = FA("constantFA.in")
-    scanner = Scanner('p2.txt', st, ct, faS, faC)
+    scanner = Scanner('p1.txt', st, ct, faS, faC)
 
-    prog = 3
+    prog = 2
     if prog == 2:
         g = Grammar('Grammars/grammar2.in')  # own language
         lr = LR(g, createW(scanner, st, ct))
