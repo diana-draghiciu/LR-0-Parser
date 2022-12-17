@@ -195,14 +195,15 @@ class LR:
         print("Output band: " + str(oband))
 
         parent, prod = self.getProductionByNr(oband[0])
-        self.info.append(parent)
+        #self.info.append(parent)
 
-        self.addToTable(oband, 0, 1)
-        self.printTable()
+        #self.addToTable(oband, 0, 1)
+        #self.printTable()
+        return oband
 
     def printTable(self):
         for i in range(len(self.info)):
-            print(i+1, self.info[i], self.parent[i], self.sibling[i])
+            print(i + 1, self.info[i], self.parent[i], self.sibling[i])
 
     def addToTable(self, oband, obandIndex, parent_index):
         parent, prod = self.getProductionByNr(oband[obandIndex])
@@ -211,9 +212,14 @@ class LR:
             self.info.append(elem)
             self.parent.append(parent_index)
             if self.info[-2] != parent:
-                self.sibling.append(len(self.info)-1)
+                self.sibling.append(len(self.info) - 1)
             else:
                 self.sibling.append(0)
             if elem in self.grammar.non_terminals:
                 self.addToTable(oband, obandIndex + 1, index)
             index += 1
+
+    def testParseInput(self):
+        w = ['a', 'b', 'b', 'c']
+        oband = self.parseInput(w)
+        assert oband == [1, 2, 2, 3]
