@@ -200,6 +200,7 @@ class LR:
                 break
 
         parent, prod = self.getProductionByNr(oband[0])
+
         self.info.append(parent)
         self.addToTable(oband, 0, 1)
         print("WorkStack: " + str(wstack))
@@ -224,3 +225,8 @@ class LR:
             if elem in self.grammar.non_terminals:
                 self.addToTable(oband, obandIndex + 1, index)
             index += 1
+
+    def testParseInput(self):
+        w = ['a', 'b', 'b', 'c']
+        oband = self.parseInput(w)
+        assert oband == [1, 2, 2, 3]
