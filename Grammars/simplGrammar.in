@@ -1,0 +1,8 @@
+Program
+Program,Declaration,Type,Stmtlist,Stmt,
+main,(,),:, ,int,string
+Program->main():Stmt
+Stmt->Declaration
+Declaration->TypeIdentifier
+Type->int
+Type->string

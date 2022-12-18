@@ -27,11 +27,13 @@ if __name__ == '__main__':
     ct = ST()
     faS = FA("symbolFA.in")
     faC = FA("constantFA.in")
-    scanner = Scanner('p2.txt', st, ct, faS, faC)
+    #scanner = Scanner('p2.txt', st, ct, faS, faC)
+    scanner = Scanner('p1.txt', st, ct, faS, faC)  # simple one
 
     prog = 2
     if prog == 2:
-        g = Grammar('Grammars/grammar2.in')  # own language
+        #g = Grammar('grammar2.in')  # own language
+        g = Grammar('Grammars/simplGrammar.in')  # simple one
         lr = LR(g, createW(scanner, st, ct))
     elif prog == 3:
         g = Grammar('Grammars/grammar3.in')
