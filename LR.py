@@ -37,16 +37,19 @@ class LR:
                 if index != -1:
                     if index < len(elem[1]) - 1:  # dot not at end
                         # symbol = elem[1][index + 1:]  # WHAT IF IT'S COMPOSED FROM MULTIPLE SYMBOLS?
-                        symbol = elem[1][index + 1:]  # ASSUME ONLY ONE AT END
-                        if symbol in self.grammar.non_terminals:  # found dot non-terminal
-                            for prod in self.grammar.productions.keys():  # look for a production with the symbol
-                                if prod == symbol:
-                                    for val in self.grammar.productions[prod]:
-                                        right = ""
-                                        right += "."
-                                        right += val  # compose the right side with the dot
-                                        if (symbol, right) not in items:
-                                            items.append((symbol, right))  # add to the new item to the list of items
+                        for X in self.grammar.non_terminals:
+                            st = elem[1][index+1:]
+                            symbol = elem[1][index + 1:]  # ASSUME ONLY ONE AT END
+                            # if symbol in self.grammar.non_terminals:  # found dot non-terminal
+                            if st.startswith(symbol):
+                                for prod in self.grammar.productions.keys():  # look for a production with the symbol
+                                    if prod == symbol:
+                                        for val in self.grammar.productions[prod]:
+                                            right = ""
+                                            right += "."
+                                            right += val  # compose the right side with the dot
+                                            if (symbol, right) not in items:
+                                                items.append((symbol, right))  # add to the new item to the list of items
                     else:  # dot at end
                         continue
             if prev == items:

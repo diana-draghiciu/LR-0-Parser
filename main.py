@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ct = ST()
     faS = FA("symbolFA.in")
     faC = FA("constantFA.in")
-    scanner = Scanner('p1.txt', st, ct, faS, faC)
+    scanner = Scanner('p2.txt', st, ct, faS, faC)
 
     prog = 2
     if prog == 2:
